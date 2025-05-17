@@ -1,4 +1,4 @@
-import HomeCompo from "./Components/HomeCompo";
+import HomeCompo from "@/Components/HomeCompo";
 
 export default function Home() {
   return (

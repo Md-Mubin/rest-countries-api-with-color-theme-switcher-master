@@ -1,9 +1,18 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { countryDataApi } from '../../../data'
 import { SlArrowDown } from "react-icons/sl";
+import { useDispatch } from 'react-redux';
+import { countryDataApi } from '../../data';
+import { selectedCountryData } from '@/store/Slices/countrySlice';
+import { useRouter } from 'next/navigation';
 
 const HomeCompo = () => {
+
+    // ======== dispatch
+    const dispatch = useDispatch()
+    
+    // ======== router navigation
+    const router = useRouter()
 
     // ======== All Hooks 
     const [datas, setDatas] = useState([])
@@ -29,29 +38,37 @@ const HomeCompo = () => {
         setDatas(filtered)
     }, [inputSearch, selectedRegion])
 
-    const uniqueRegions = ["All", ...new Set(countryDataApi.map(item => item.region))];
+    // ======== for unique regions in dropdown
+    const uniqueRegions = ["All", ...new Set(countryDataApi.map(item => item.region))]
+
+    // ======== handleing card information
+    const handleCards = (selectedCardDatas)=>{
+        dispatch(selectedCountryData(selectedCardDatas))
+        localStorage.setItem("countryData", JSON.stringify(selectedCardDatas))
+        router.push("/country")
+    }
 
     return (
         <>
-            <section className='bg-[#2a2a3a] min-h-[100dvh]'>
+            <section>
                 <div className="container">
 
                     {/* ======================== search and drop down filter area ======================== */}
-                    <div className='py-8 flex justify-between items-center'>
+                    <div className='py-8 flex justify-between items-center flex-col sm:flex-row gap-8 sm:gap-0'>
                         <div>
                             <input
                                 type="text"
                                 placeholder='...search'
                                 onChange={(e) => setInputSearch(e.target.value)}
-                                className='w-[800px] p-2 border-b-2 border-[#7e7e7e] outline-none text-[#f0f0f0] placeholder:text-[#7e7e7e] tracking-widest' />
+                                className='md:w-[450px] xl:w-[800px] p-2 border-b-2 border-[#7e7e7e] outline-none text-[#2b2b2b] dark:text-[#f0f0f0] placeholder:text-[#7e7e7e] tracking-widest' />
 
                         </div>
                         <div className='relative'>
-                            <button onClick={() => setShow(!show)} className='font-medium text-lg text-[#ffffff80] bg-[#7e7e7e33] px-8 py-2 rounded-xl flex items-center gap-3 hover:bg-[#1d1d29] duration-200 cursor-pointer'>
+                            <button onClick={() => setShow(!show)} className='font-medium text-lg text-[#000] dark:text-[#a7afba] bg-[#1b1b1b33] dark:bg-[#7e7e7e33] px-8 py-2 rounded-xl flex items-center gap-3 hover:bg-[#1d1d29] hover:text-[#fff] duration-200 cursor-pointer'>
                                 Filter by Region <SlArrowDown className={`duration-200 ${show && "rotate-[-180deg]"}`} />
                             </button>
 
-                            <ul className={`absolute bg-[#3b3b47] top-14 w-full rounded-xl z-[100] text-[#fff] transition-[height, padding] ease-in-out duration-300 overflow-hidden h-0 py-0 ${show && "h-[380px] py-2"}`}>
+                            <ul className={`absolute bg-[#a7afba] dark:bg-[#3b3b47] top-14 w-full rounded-xl z-[100] text-[#fff] transition-[height, padding] ease-in-out duration-300 overflow-hidden h-0 py-0 ${show && "h-[380px] py-2"}`}>
                                 {
                                     uniqueRegions.map((region, index) => (
                                         <li
@@ -72,7 +89,7 @@ const HomeCompo = () => {
                         {
                             datas.length > 0 ? (
                                 datas.map((items, index) => (
-                                    <ul key={index} className='w-full md:w-[320px] lg:w-[300px] xl:w-[360px] bg-[#3e3e50] rounded-lg overflow-hidden group md:hover:grow duration-200 cursor-pointer'>
+                                    <ul onClick={()=>handleCards(items)} key={index} className='w-full md:w-[320px] lg:w-[300px] xl:w-[360px] bg-slate-500 dark:bg-[#3e3e50] rounded-lg overflow-hidden group md:hover:grow duration-200 cursor-pointer'>
                                         <li>
                                             <img className='h-[200px] w-full object-cover' src={items.flags.svg} alt="flag image" />
                                         </li>
