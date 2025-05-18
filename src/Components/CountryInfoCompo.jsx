@@ -28,8 +28,10 @@ const CountryInfoCompo = () => {
                     <div className='flex items-center justify-between gap-10 flex-col lg:flex-row'>
 
                         {/* flag */}
-                        <img src={selectedMapData?.flags?.svg} alt="country flag image" className='w-[400px] xl:w-[600px]' />
-
+                        {selectedMapData?.flags?.svg && (
+                        <img src={selectedMapData?.flags?.svg} loading='lazy' alt="country flag image" className='w-[400px] xl:w-[600px]' />
+                        )}
+                        
                         <div className='lg:w-[750px]'>
 
                             {/* name */}
@@ -44,8 +46,8 @@ const CountryInfoCompo = () => {
                                 <li>Sub Region: {selectedMapData?.subregion}</li>
                                 <li>Capital: {selectedMapData?.capital}</li>
                                 <li>Top Level Domain: {selectedMapData?.topLevelDomain}</li>
-                                <li>Currencies: {selectedMapData?.currencies.map((items) => items.name)}</li>
-                                <li>Languages: {selectedMapData?.languages.map((items) => items.name).join(', ')}</li>
+                                <li>Currencies: {selectedMapData?.currencies ? selectedMapData?.currencies.map((items) => items.name) : "N/A"}</li>
+                                <li>Languages: {selectedMapData?.languages ? selectedMapData?.languages.map((items) => items.name).join(', ') : "N/A"}</li>
                             </ul>
 
                             {/* border countries */}

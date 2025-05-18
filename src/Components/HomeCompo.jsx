@@ -91,7 +91,7 @@ const HomeCompo = () => {
                                 datas.map((items, index) => (
                                     <ul onClick={()=>handleCards(items)} key={index} className='w-full md:w-[320px] lg:w-[300px] xl:w-[360px] bg-slate-500 dark:bg-[#3e3e50] rounded-lg overflow-hidden group md:hover:grow duration-200 cursor-pointer'>
                                         <li>
-                                            <img className='h-[200px] w-full object-cover' src={items.flags.svg} alt="flag image" />
+                                            <img loading='lazy' className='h-[200px] w-full object-cover' src={items.flags.svg} alt="flag image" />
                                         </li>
                                         <li className='p-8 text-[#f0f0f0] tracking-widest'>
                                             <h3 className='w-[300px] mb-5 font-semibold text-xl md:group-hover:scale-[1.3] origin-left duration-200 will-change-transform'>{items?.name ? items?.name : "No Data Found"}</h3>
