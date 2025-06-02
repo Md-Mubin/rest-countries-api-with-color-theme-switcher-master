@@ -1,13 +1,29 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { countryDataApi } from '../../data'
+import { selectedCountryData } from '@/store/Slices/countrySlice'
 
 const CountryInfoCompo = () => {
 
+    const dispatch = useDispatch()
     const [borderCountryData, setBorderCountryData] = useState([])
 
     const selectedMapData = useSelector((state) => state.countryData)
+
+    // storig and reDispatching redux from localStorage on first mount
+    useEffect(() => {
+        if (typeof window === "undefined") return // SSR guard
+
+        const localData = localStorage.getItem("countryData")
+        if (localData) {
+            const parsed = JSON.parse(localData)
+            
+            if (!selectedMapData || selectedMapData.length === 0) {
+                dispatch(selectedCountryData(parsed))
+            }
+        }
+    }, [])
 
     // ======== use effect uses
     useEffect(() => {
@@ -29,9 +45,9 @@ const CountryInfoCompo = () => {
 
                         {/* flag */}
                         {selectedMapData?.flags?.svg && (
-                        <img src={selectedMapData?.flags?.svg} loading='lazy' alt="country flag image" className='w-[400px] xl:w-[600px]' />
+                            <img src={selectedMapData?.flags?.svg} loading='lazy' alt="country flag image" className='w-[400px] xl:w-[600px]' />
                         )}
-                        
+
                         <div className='lg:w-[750px]'>
 
                             {/* name */}
@@ -54,11 +70,13 @@ const CountryInfoCompo = () => {
                             <ul className='flex items-center flex-wrap gap-4'>
                                 <li className='w-[210px] font-semibold text-2xl dark:text-[#fff]'>Border Countries: </li>
                                 {
-                                    borderCountryData.length > 0 ? (borderCountryData.map((datas, index) => (
-                                        <li key={index} className='px-4 py-2 bg-[#] tracking-widest dark:text-[#fff] ring rounded-md hover:bg-[#40404e] duration-200'>
-                                            {datas?.name}
-                                        </li>
-                                    ))) : (
+                                    borderCountryData.length > 0 ? (
+                                        borderCountryData.map((datas, index) => (
+                                            <li key={index} className='px-4 py-2 bg-[#] tracking-widest dark:text-[#fff] ring rounded-md hover:bg-[#40404e] duration-200'>
+                                                {datas?.name}
+                                            </li>
+                                        ))
+                                    ) : (
                                         <p className='px-4 py-2 bg-[#] tracking-widest dark:text-[#fff] ring rounded-md hover:bg-[#40404e] duration-200'>No Data Found</p>
                                     )
                                 }
