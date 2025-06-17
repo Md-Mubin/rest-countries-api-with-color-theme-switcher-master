@@ -10,7 +10,6 @@ const HomeCompo = () => {
 
     // ======== dispatch
     const dispatch = useDispatch()
-    
     // ======== router navigation
     const router = useRouter()
 
